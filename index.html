@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Number Guessing Game</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600&display=swap');
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #ffc0cb, #ffe4e1);
+      font-family: 'Quicksand', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #8b008b;
+      user-select: none;
+    }
+
+    h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: 3rem;
+      margin-bottom: 20px;
+      color: #ff69b4;
+      text-shadow: 2px 2px #fff0f5;
+    }
+
+    #gameContainer {
+      background-color: #fff0f5;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    input[type="number"] {
+      padding: 10px;
+      font-size: 1.2rem;
+      border: 2px solid #ff69b4;
+      border-radius: 10px;
+      width: 80%;
+      margin-bottom: 15px;
+    }
+
+    button {
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-size: 1rem;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin: 5px;
+    }
+
+    button:hover {
+      background-color: #ff1493;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      min-height: 24px;
+    }
+
+    #attempts {
+      margin-top: 10px;
+      font-size: 1rem;
+      color: #d2691e;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Guess the Number!</h1>
+  <div id="gameContainer">
+    <p>I'm thinking of a number between 1 and 100.</p>
+    <input type="number" id="guessInput" placeholder="Enter your guess" min="1" max="100" />
+    <br />
+    <button id="guessBtn">Guess</button>
+    <button id="resetBtn">Restart</button>
+    <div id="message"></div>
+    <div id="attempts">Attempts left: <span id="attemptsLeft">10</span></div>
+  </div>
+
+  <script>
+    const guessInput = document.getElementById('guessInput');
+    const guessBtn = document.getElementById('guessBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const message = document.getElementById('message');
+    const attemptsLeft = document.getElementById('attemptsLeft');
+
+    let randomNumber;
+    let attempts;
+
+    function initializeGame() {
+      randomNumber = Math.floor(Math.random() * 100) + 1;
+      attempts = 10;
+      attemptsLeft.textContent = attempts;
+      message.textContent = '';
+      guessInput.value = '';
+      guessInput.disabled = false;
+      guessBtn.disabled = false;
+    }
+
+    guessBtn.addEventListener('click', () => {
+      const userGuess = parseInt(guessInput.value);
+      if (isNaN(userGuess) || userGuess < 1 || userGuess > 100) {
+        message.textContent = 'Please enter a number between 1 and 100.';
+        return;
+      }
+
+      attempts--;
+      attemptsLeft.textContent = attempts;
+
+      if (userGuess === randomNumber) {
+        message.textContent = `🎉 Congratulations! You guessed it right! The number was ${randomNumber}.`;
+        guessInput.disabled = true;
+        guessBtn.disabled = true;
+      } else if (attempts === 0) {
+        message.textContent = `😞 Game over! The number was ${randomNumber}.`;
+        guessInput.disabled = true;
+        guessBtn.disabled = true;
+      } else if (userGuess < randomNumber) {
+        message.textContent = 'Too low! Try again.';
+      } else {
+        message.textContent = 'Too high! Try again.';
+      }
+
+      guessInput.value = '';
+      guessInput.focus();
+    });
+
+    resetBtn.addEventListener('click', initializeGame);
+
+    // Initialize the game on page load
+    initializeGame();
+  </script>
+
+</body>
+</html>
